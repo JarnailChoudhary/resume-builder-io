@@ -118,7 +118,7 @@ function App() {
     {
       path: "/resume",
       element: <><Header signIn={signIn} handlesignout={handlesignout} /> 
-      <ResumeCollections />
+      <ResumeCollections signIn={signIn} fbsignin={fbsignin}/>
       </>,
       errorElement: <div>Error</div>,
     },
