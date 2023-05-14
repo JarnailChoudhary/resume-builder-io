@@ -88,6 +88,10 @@ const addNewHandle = async () => {
           EducationInfoDetails: [],
           GeneralInfoDetails: {},
           ProjectInfoDetails: [],
+          SkillsInfoDetails: [],
+          WorkInfoDetails: [],
+          AchievementsInfoDetails: [],
+          HobbiesInfoDetails: [],
         id: generateId,
       })
       
