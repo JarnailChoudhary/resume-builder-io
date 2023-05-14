@@ -18,7 +18,7 @@
     box-shadow: 0 0px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     gap: 6px;
-    background-color: #49dede;
+    background-color: #dd65b9;
 }
 
 .resumecollections__create > h1 {
@@ -33,6 +33,8 @@
     font-size: 1.7em;
     margin: 40px 0 20px 0;
     font-family:  'Roboto', sans-serif;
+    font-weight: 700;
+    color: #1b3d0c;
 }
 
 .resumecollections__wrap {
@@ -72,11 +74,13 @@
     justify-content: center;
     align-items: center;
     padding: 10px 20px;
-    background-color: black;
+    background-color: rgb(24, 24, 24);
     bottom: 0;
-    color: #49dede;
+    color: #fff;
 }
 
 .resumecollections__item__details > h1 {
     font-size: 1.5em;
+    font-family: "Poppins", sans-serif;
+    text-transform: capitalize;
 }
