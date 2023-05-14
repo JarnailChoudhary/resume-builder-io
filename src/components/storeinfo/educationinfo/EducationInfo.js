@@ -9,8 +9,10 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../../firebase-setup/firebase';
 import { updateDoc, doc } from "firebase/firestore";
 import db from '../../../firebase-setup/firebase';
+import { useParams } from 'react-router-dom';
 
-const EducationInfo = ({ userInfoData, save, setSave }) => {
+const EducationInfo = ({ userInfoData, save, setSave, wholeData }) => {
+    const {ResumeId} = useParams()
     const [educationTitle, setEducationTitle] = useState('')
     const [educationSchool, setEducationSchool] = useState('')
     const [educationCity, setEducationCity] = useState('')
@@ -25,19 +27,22 @@ const EducationInfo = ({ userInfoData, save, setSave }) => {
 
     const [user] = useAuthState(auth);
 
+
+// save incomming data
+useEffect(() => {
+    if (userInfoData) {
+        setEducationInfoAll(userInfoData?.EducationInfoDetails)
+    }
+}, [userInfoData, ResumeId])
+
     // save education details in database user logged in details
     async function addDetails() {
         if (user) {
             const userEmail = user.email;
             // user-details
             try {
-                // Add a new document in collection "cities"
-                await updateDoc(doc(db, "user-details", userEmail), {
-                    EducationInfoDetails: {
-                        educationarray: educationInfoAll,
-                        sectionType: 'Education'
-                    },
-                });
+                // Add a new document in collection "users-details"
+                await updateDoc(doc(db, "user-details", userEmail), updateDetail());
                 setSave(true)
             } catch (e) {
                 console.log(e)
@@ -48,17 +53,14 @@ const EducationInfo = ({ userInfoData, save, setSave }) => {
         }, 2000)
     }
 
-    useEffect(() => {
-        if (userInfoData) {
-            const educationDetailsFirebase = userInfoData?.EducationInfoDetails?.educationarray
-            setEducationTitle(educationDetailsFirebase?.etitle || '')
-            setEducationMarks(educationDetailsFirebase?.eScore || '')
-            setEducationYear(educationDetailsFirebase?.eYearPass || '')
-            setEducationMarkstype(educationDetailsFirebase?.eScoreType || '')
-            setEducationSchool(educationDetailsFirebase?.eSchool || '')
-            setEducationInfoAll(userInfoData.EducationInfoDetails?.educationarray || '')
-        }
-    }, [userInfoData])
+    const updateDetail = () => {
+        let tempWholeData = wholeData
+        
+       tempWholeData.resumecollectionall.filter((item) => item.id == ResumeId)[0].EducationInfoDetails = educationInfoAll
+        return tempWholeData
+    }
+
+   
     // add Education Details
     const addEducationDetails = () => {
         if (educationTitle) {
@@ -76,12 +78,15 @@ const EducationInfo = ({ userInfoData, save, setSave }) => {
     }
 
     // handle display of education details
-    const handlechipdisplay = (chipTitle, chipSchool, chipMarks, chipYear, chipMarksType, chipIndex) => {
+    const handlechipdisplay = (chipTitle, chipSchool, chipMarks, chipYear, chipMarksType, chipIndex, chipCountry, chipState, chipCity) => {
         setEducationTitle(chipTitle)
         setEducationMarks(chipMarks)
         setEducationSchool(chipSchool)
         setEducationYear(chipYear)
         setEducationMarkstype(chipMarksType)
+        setEducationState(chipState)
+        setEducationCountry(chipCountry)
+        setEducationCity(chipCity)
     }
     // delete chip from list
     const deleteEducationchip = (chipIndex) => {
@@ -92,6 +97,9 @@ const EducationInfo = ({ userInfoData, save, setSave }) => {
         setEducationYear('')
         setEducationMarkstype('cgpa')
         setEducationActiveChip('new')
+        setEducationCountry('')
+        setEducationState('')
+        setEducationCity('')
     }
 
     // drop down cgpa and %
@@ -176,7 +184,8 @@ const EducationInfo = ({ userInfoData, save, setSave }) => {
                             onClick={() => {
                                 setEducationTitle(''); setEducationSchool('');
                                 setEducationMarks(''); setEducationYear('');
-                                setEducationMarkstype('cgpa');
+                                setEducationMarkstype('cgpa'); setEducationCity('');
+                                setEducationState(''); setEducationCountry('');
                                 setEducationActiveChip('new');
                             }}>NEW</div>
 
@@ -185,7 +194,7 @@ const EducationInfo = ({ userInfoData, save, setSave }) => {
                                 <span onClick={() => {
                                     setEducationActiveChip(i);
                                     setEducationupdateIndex(i);
-                                    handlechipdisplay(preview.etitle, preview.eSchool, preview.eScore, preview.eYearPass, preview.eScoreType, i)
+                                    handlechipdisplay(preview.etitle, preview.eSchool, preview.eScore, preview.eYearPass, preview.eScoreType, i, preview.eCountry, preview.eState, preview.eCity)
                                 }}>
                                     <span >{`Title : ${preview.etitle}`}</span>
                                     <span>{`School : ${preview.eSchool}`}</span>

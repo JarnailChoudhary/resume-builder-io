@@ -5,8 +5,10 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { Alert } from '@mui/material';
 import { doc, updateDoc } from 'firebase/firestore';
 import db, { auth } from '../../../firebase-setup/firebase';
+import { useParams} from 'react-router-dom';
 
-const ProjectInfo = ({ setSave, save, userInfoData }) => {
+const ProjectInfo = ({ setSave, save, userInfoData, wholeData }) => {
+    const {ResumeId} = useParams()
     const [projectTitle, setProjectTitle] = useState('')
     const [projectDescription, setProjectDescription] = useState('')
     const [projectLiveLink, setProjectLiveLink] = useState('')
@@ -19,15 +21,16 @@ const ProjectInfo = ({ setSave, save, userInfoData }) => {
 
     useEffect(() => {
         if (userInfoData) {
-            const projectDetailsFirebase = userInfoData?.ProjectInfoDetails?.projectarray
-            
-            setProjectTitle(projectDetailsFirebase?.ptitle || '')
-            setProjectDescription(projectDetailsFirebase?.pdesc || '')
-            setProjectLiveLink(projectDetailsFirebase?.plive || '')
-            setProjectSourceLink(projectDetailsFirebase?.psrc || '')
-            setprojectInfoAll(projectDetailsFirebase || '')
+            setprojectInfoAll(userInfoData?.ProjectInfoDetails)
         }
     }, [userInfoData])
+
+    const updateDetail = () => {
+        let tempWholeData = wholeData
+       tempWholeData.resumecollectionall.filter((item) => item.id == ResumeId)[0].ProjectInfoDetails = projectInfoAll
+        return tempWholeData
+    }
+
 
     // save education details in database user logged in details
     async function addDetails() {
@@ -36,12 +39,7 @@ const ProjectInfo = ({ setSave, save, userInfoData }) => {
             // user-details
             try {
                 // Add a new document in collection "cities"
-                await updateDoc(doc(db, "user-details", userEmail), {
-                    ProjectInfoDetails: {
-                        projectarray: projectInfoAll,
-                        sectionType: 'Project'
-                    },
-                });
+                await updateDoc(doc(db, "user-details", userEmail), updateDetail());
                 setSave(true)
             } catch (e) {
                 console.log(e)
@@ -63,8 +61,11 @@ const ProjectInfo = ({ setSave, save, userInfoData }) => {
     }
 
     // handle display of education details
-    const handlechipdisplay = (chipTitle, chipSchool, chipIndex) => {
-        console.log(chipTitle, chipSchool, chipIndex)
+    const handlechipdisplay = (chipTitle, chipDesc, chipIndex, chipLink, chipSrc) => {
+        setProjectTitle(chipTitle)
+        setProjectDescription(chipDesc)
+        setProjectLiveLink(chipLink)
+        setProjectSourceLink(chipSrc)
     }
     // delete chip from list
     const deleteEducationchip = (chipIndex) => {
@@ -127,7 +128,7 @@ const ProjectInfo = ({ setSave, save, userInfoData }) => {
                                 <span onClick={() => {
                                     setEducationActiveChip(preview.ptitle);
                                     setSocialLinkpdateIndex(i)
-                                    handlechipdisplay(preview.ptitle, preview.pdesc, i)
+                                    handlechipdisplay(preview.ptitle, preview.pdesc, i, preview.plive, preview.psrc)
                                 }}>
                                     <span >{`Title : ${preview.ptitle}`}</span>
                                     <span>{`Description : ${preview.pdesc}`}</span>

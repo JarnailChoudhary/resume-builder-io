@@ -103,10 +103,10 @@ const Resume = ({ signIn, fbsignin, dref }) => {
                                 activeSection === 'achieve' ? <h6>achieve</h6> :
                                     activeSection === 'others' ? <h6>others</h6> : <div></div>}</> : <>
                         {activeSection === 'general' ? <GeneralInfo userInfoData={userInfoData} save={save} setSave={setSave} wholeData={wholeData}/> :
-                            activeSection === 'education' ? <EducationInfo userInfoData={userInfoData} save={save} setSave={setSave} /> :
-                                activeSection === 'project' ? <ProjectInfo userInfoData={userInfoData} save={save} setSave={setSave} /> :
+                            activeSection === 'education' ? <EducationInfo userInfoData={userInfoData} save={save} setSave={setSave} wholeData={wholeData} /> :
+                                activeSection === 'project' ? <ProjectInfo userInfoData={userInfoData} save={save} setSave={setSave} wholeData={wholeData}/> :
                                     activeSection === 'skills' ? <SkillsInfo /> :
-                                        activeSection === 'achieve' ? <AchievementsInfo /> :
+                                        activeSection === 'achieve' ? <AchievementsInfo userInfoData={userInfoData} save={save} setSave={setSave} wholeData={wholeData}/> :
                                             activeSection === 'others' ? <OthersInfo /> : <div></div>}
                     </>}</>}
             </div>

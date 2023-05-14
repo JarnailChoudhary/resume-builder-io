@@ -52,35 +52,6 @@ const GeneralInfo = ({ userInfoData, setSave, save, wholeData }) => {
         { iconValue: 'PinterestIcon', icon: <PinterestIcon /> },
         { iconValue: 'RedditIcon', icon: <RedditIcon /> },
     ]
-    // add user logged in details
-    // async function addDetails() {
-    //     if (user) {
-    //         const userEmail = user.email;
-    //         // user-details
-    //         try {
-    //             // Add a new document in collection "cities"
-    //             await updateDoc(doc(db, "user-details", userEmail), {
-    //                 'GeneralInfoDetails': {
-    //                     'generalarray': {
-    //                         name,
-    //                         tagline,
-    //                         email,
-    //                         phonenum,
-    //                         profileImageUrl,
-    //                         socialLinks: socialLinksAll
-    //                     },
-    //                     sectionType: 'general'
-    //                 }
-    //             });
-    //             setSave(true)
-    //         } catch (e) {
-    //             console.log(e)
-    //         }
-    //         setTimeout(() => {
-    //             setSave(false)
-    //         }, 2000)
-    //     }
-    // }
 
     async function addDetails() {
         if (user) {
